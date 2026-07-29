@@ -1,2 +1,2 @@
-*.txt
+documentation/*.txt
 packages/backend/meilisearch/meilisearch

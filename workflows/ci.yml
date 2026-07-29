@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: packages/frontend/jusBr
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: packages/frontend/jusBr/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Rodar lint (ESLint)
+        run: npm run lint
+
+      - name: Rodar type check (TypeScript)
+        run: npx tsc -b --noEmit
+
+      - name: Rodar testes (Vitest)
+        run: npm test

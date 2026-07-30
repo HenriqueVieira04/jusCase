@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { ThemeProvider, useTheme } from './ThemeContext'
+import { ThemeProvider } from './ThemeContext'
+import { useTheme } from './useTheme'
 
 describe('ThemeContext', () => {
   it('inicia com isDarkMode = false', () => {

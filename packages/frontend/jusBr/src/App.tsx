@@ -1,5 +1,5 @@
 import SearchBar from './components/searchBar/SearchBar';
-import { useTheme } from './contexts/ThemeContext'
+import { useTheme } from './contexts/useTheme'
 
 function App() {
   const { isDarkMode, toggleDarkMode } = useTheme()

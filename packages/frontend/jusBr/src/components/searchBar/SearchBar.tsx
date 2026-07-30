@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useTheme } from "../../contexts/ThemeContext"
 
 export default function SearchBar(){
-    const sl = 1
+    const [sl, setSL] = useState(1)
     const { isDarkMode } = useTheme()
     const [suggestions] = useState<string[]>([
         "Ação Rescisória",
@@ -28,7 +28,7 @@ export default function SearchBar(){
             <div className={`w-full h-md ${styleDiv} ${borderComplete}`}>
                 <input
                     id="inputS"
-                    className={`w-full h-full pt-2 pb-2 pr-4 pl-4 outline-none ring-0 bg-transparent ${styleInput}`}
+                    className={`w-full h-full pt-2 pb-2 pr-8 pl-8 outline-none ring-0 bg-transparent ${styleInput}`}
                     type="text"
                 />
             </div>
@@ -38,8 +38,8 @@ export default function SearchBar(){
                     {suggestions.map((sugestao, index) => (
                         <li
                             key={index}
-                            className={`px-4 py-2 cursor-pointer ${styleSuggestion} transition-colors`}
-                            onClick={() => (document.querySelector<HTMLInputElement>("#inputS")!.value = sugestao)}
+                            className={`px-8 py-2 cursor-pointer ${styleSuggestion} transition-colors`}
+                            onClick={() => {document.querySelector<HTMLInputElement>("#inputS")!.value = sugestao; setSL(0)}}
                         >
                             {sugestao}
                         </li>

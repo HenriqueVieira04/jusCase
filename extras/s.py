@@ -48,4 +48,4 @@ dataset_meilisearch = [
 with open("cnj_assuntos.json", "w", encoding="utf-8") as f:
     json.dump(dataset_meilisearch, f, ensure_ascii=False, indent=2)
 
-print(f"\nSucesso! {len(dataset_meilisearch)} termos únicos salvos sem duplicatas.")
+print(f"\n {len(dataset_meilisearch)} termos únicos.")

@@ -1,27 +1,40 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { ThemeProvider } from '../../contexts/ThemeContext'
 import SearchBar from './SearchBar'
+
+// ── Mock do módulo de API ───────────────────────────────────
+// Substitui a função real fetchSugestoes() por uma função
+// fantasma (vi.fn()) que os testes controlam sem precisar
+// do backend rodando.
+vi.mock('../../api/sugestoes', () => ({
+  fetchSugestoes: vi.fn(),
+}))
+
+// ── Depois do vi.mock, importamos a VERSÃO MOCKADA ──────────
+import { fetchSugestoes } from '../../api/sugestoes'
+
+const fetchSugestoesMock = vi.mocked(fetchSugestoes)
 
 function renderWithTheme(ui: React.ReactElement) {
   return render(<ThemeProvider>{ui}</ThemeProvider>)
 }
 
 describe('SearchBar', () => {
+  // Reseta o estado do mock entre um teste e outro
+  // (chamadas anteriores, retornos programados, etc.)
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('renderiza o input com placeholder', () => {
     renderWithTheme(<SearchBar />)
     expect(screen.getByPlaceholderText('Pesquisar...')).toBeInTheDocument()
   })
 
-  it('exibe a lista de sugestões por padrão', () => {
+  it('não exibe lista de sugestões se não há resultados', () => {
     renderWithTheme(<SearchBar />)
-    const list = screen.getByRole('list')
-    expect(list).toBeInTheDocument()
-    expect(screen.getByText('Ação Rescisória')).toBeInTheDocument()
-    expect(screen.getByText('Ação Civil Pública')).toBeInTheDocument()
-    expect(screen.getByText('Ação Popular')).toBeInTheDocument()
-    expect(screen.getByText('Habeas Corpus')).toBeInTheDocument()
-    expect(screen.getByText('Mandado de Segurança')).toBeInTheDocument()
+    expect(screen.queryByRole('list')).not.toBeInTheDocument()
   })
 
   it('atualiza o valor do input quando o usuário digita', () => {
@@ -31,35 +44,81 @@ describe('SearchBar', () => {
     expect(input).toHaveValue('ação')
   })
 
-  it('destaca o termo buscado nas sugestões com <strong>', () => {
+  it('não faz fetch se query tiver menos de 4 caracteres efetivos', async () => {
+    renderWithTheme(<SearchBar />)
+    const input = screen.getByPlaceholderText('Pesquisar...')
+    fireEvent.change(input, { target: { value: 'abc' } })
+
+    await waitFor(() => {
+      expect(fetchSugestoesMock).not.toHaveBeenCalled()
+    })
+  })
+
+  it('faz fetch se query tiver 4 ou mais caracteres', async () => {
+    // Programa a resposta do mock
+    fetchSugestoesMock.mockResolvedValue(['Ação Penal'])
+
+    renderWithTheme(<SearchBar />)
+    const input = screen.getByPlaceholderText('Pesquisar...')
+    fireEvent.change(input, { target: { value: 'ação penal' } })
+
+    // Verifica se a função mockada foi chamada com o argumento certo
+    await waitFor(() => {
+      expect(fetchSugestoesMock).toHaveBeenCalledWith('ação penal')
+    })
+  })
+
+  it('exibe sugestões retornadas pelo backend', async () => {
+    fetchSugestoesMock.mockResolvedValue([
+      'Ação Penal',
+      'Ação Popular',
+    ])
+
     renderWithTheme(<SearchBar />)
     const input = screen.getByPlaceholderText('Pesquisar...')
     fireEvent.change(input, { target: { value: 'ação' } })
 
-    const items = screen.getAllByRole('listitem')
-    // Toda sugestão que contenha "Ação" deve ter <strong>Ação</strong>
-    const filteredItems = items.filter(
-      (li) => li.textContent?.toLowerCase().includes('ação')
-    )
-    expect(filteredItems.length).toBeGreaterThan(0)
-    filteredItems.forEach((li) => {
-      expect(li.innerHTML).toContain('<strong class="font-bold">Ação</strong>')
+    // O waitFor espera o debounce (250ms) + o resolve da Promise
+    await waitFor(() => {
+      const items = screen.getAllByRole('listitem')
+      expect(items).toHaveLength(2)
+      expect(items[0].textContent).toBe('Ação Penal')
+      expect(items[1].textContent).toBe('Ação Popular')
     })
   })
 
-  it('esconde a lista ao clicar em uma sugestão', () => {
+  it('aplica highlight nos termos buscados nas sugestões', async () => {
+    fetchSugestoesMock.mockResolvedValue(['Ação Penal'])
+
     renderWithTheme(<SearchBar />)
-    const item = screen.getByText('Ação Rescisória')
-    fireEvent.click(item)
-    expect(screen.queryByRole('list')).not.toBeInTheDocument()
+    const input = screen.getByPlaceholderText('Pesquisar...')
+    fireEvent.change(input, { target: { value: 'ação' } })
+
+    await waitFor(() => {
+      const items = screen.getAllByRole('listitem')
+      expect(items).toHaveLength(1)
+      // O highlight quebra o texto em partes: "Ação" fica dentro de <strong>
+      expect(items[0].innerHTML).toContain(
+        '<strong class="font-bold">Ação</strong>'
+      )
+    })
   })
 
-  it('preenche o input com o texto da sugestão clicada', () => {
+  it('preenche o input e esconde a lista ao clicar em uma sugestão', async () => {
+    fetchSugestoesMock.mockResolvedValue(['Ação Penal'])
+
     renderWithTheme(<SearchBar />)
-    const item = screen.getByText('Ação Rescisória')
-    fireEvent.click(item)
-    expect(screen.getByPlaceholderText('Pesquisar...')).toHaveValue(
-      'Ação Rescisória'
-    )
+    const input = screen.getByPlaceholderText('Pesquisar...')
+    fireEvent.change(input, { target: { value: 'ação' } })
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('listitem')).toHaveLength(1)
+    })
+
+    // Clica na sugestão
+    fireEvent.click(screen.getAllByRole('listitem')[0])
+
+    expect(input).toHaveValue('Ação Penal')
+    expect(screen.queryByRole('list')).not.toBeInTheDocument()
   })
 })

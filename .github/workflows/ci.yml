@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-test:
+  frontend:
     runs-on: ubuntu-latest
 
     defaults:
@@ -33,6 +33,30 @@ jobs:
 
       - name: Rodar type check (TypeScript)
         run: npx tsc -b --noEmit
+
+      - name: Rodar testes (Vitest)
+        run: npm test
+
+  backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: packages/backend/express
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: packages/backend/express/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
 
       - name: Rodar testes (Vitest)
         run: npm test

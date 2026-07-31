@@ -6,7 +6,7 @@ function App() {
   const bgColor = isDarkMode ? "bg-gray-700" : "bg-gray-200";
 
   return (
-    <div className={`${bgColor} w-full min-h-screen relative flex items-start justify-center px-4 pt-[12vh] sm:pt-[18vh] md:pt-[25vh]`}>
+    <div className={`${bgColor} w-full min-h-screen relative flex items-start justify-center px-4 pt-[12vh] sm:pt-[18vh] md:pt-[20vh]`}>
       <div className='w-full max-w-xl flex flex-col items-center gap-6 sm:gap-8'>
         <div className='w-full max-w-xs sm:max-w-sm md:max-w-md'>
           <img src="/logo.png" alt="logo" className='w-full h-auto object-contain' />

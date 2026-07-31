@@ -5,6 +5,7 @@
 O case foi feito resolvendo o problema usando o Meilisearch (mecanismo de busca de código aberto) carregado com um index de busca de assuntos categorizados pelo CNJ (Conselho Nacional de Justiça). 
 
 Alguns termos sugeridos para busca:
+- direito
 - crime
 - ação
 - sexual
@@ -132,7 +133,7 @@ jusBrasil/
 │   │       └── run.sh          ← script local (sem Docker)
 │   └── frontend/
 │       └── jusBr/
-│           └── Dockerfile      ← imagem do Vite (porta 5173)
+│           └── Dockerfile      ← imagem do Vite (porta 5178)
 ```
 
 ---
@@ -143,7 +144,7 @@ jusBrasil/
 1. meilisearch   → sobe na porta 7700
 2. seed          → popula 3161 assuntos do CNJ e morre
 3. backend       → Express + GraphQL na porta 4001
-4. frontend      → Vite dev server na porta 5173
+4. frontend      → Vite dev server na porta 5178
 ```
 
 O `seed` executa uma vez e encerra. O `backend` e `frontend` ficam rodando.

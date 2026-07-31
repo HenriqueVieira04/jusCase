@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 
-// Mock do módulo meili.js para não depender do Meilisearch real
+// Mock do módulo meili.js para não depender do Meilisearch real na hora de rodar os testes
 vi.mock('../meili.js', () => ({
   searchSugestoes: vi.fn(),
 }))
@@ -21,7 +21,9 @@ afterAll(() => {
   vi.restoreAllMocks()
 })
 
+
 describe('POST /graphql - integração', () => {
+  //teste de retorno postivo de query vazia, com resultado vazio
   it('retorna 200 e sugestoes vazias para query vazia', async () => {
     const res = await request(app)
       .post('/graphql')
@@ -31,6 +33,7 @@ describe('POST /graphql - integração', () => {
     expect(res.body.data.sugestoes).toEqual([])
   })
 
+  // teste de retorno de query vaálida com valor "ação"
   it('retorna sugestoes mockadas para query válida', async () => {
     mockedSearch.mockResolvedValue([
       { id: 'cnj_353', term: 'Ação Penal' },
@@ -50,6 +53,7 @@ describe('POST /graphql - integração', () => {
     expect(mockedSearch).toHaveBeenCalledWith('ação')
   })
 
+  // teste de query inválida
   it('retorna 400 para query GraphQL inválida', async () => {
     const res = await request(app)
       .post('/graphql')
@@ -58,6 +62,7 @@ describe('POST /graphql - integração', () => {
     expect(res.status).toBe(400)
   })
 
+  // teste de bloqueio de get do apollo server
   it('retorna 400 para GET (Apollo não expõe GET por padrão)', async () => {
     const res = await request(app).get('/graphql')
     expect(res.status).toBe(400)

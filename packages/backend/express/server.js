@@ -5,6 +5,7 @@ import cors from 'cors'
 import { searchSugestoes } from './meili.js'
 
 // ── GraphQL Schema ───────────────────────────────────────────
+// schema da query e da suguestão de retorno
 export const typeDefs = `#graphql
   type Sugestao {
     id:    ID!
@@ -18,6 +19,7 @@ export const typeDefs = `#graphql
 `
 
 // ── Resolvers ────────────────────────────────────────────────
+// chamada da busca ao meilisearch
 export const resolvers = {
   Query: {
     sugestoes: async (_parent, { query }) => {
@@ -32,7 +34,7 @@ export const resolvers = {
   },
 }
 
-// ── App factory (usada pelo server.js e pelos testes) ───────
+// ── Apollo Server ───────
 export async function createApp() {
   const app = express()
   const apollo = new ApolloServer({ typeDefs, resolvers })
@@ -42,7 +44,7 @@ export async function createApp() {
   return app
 }
 
-// ── Server (só executa quando chamado diretamente, não nos testes) ──
+// ── Express ──
 async function startServer() {
   const app = await createApp()
   const PORT = process.env.PORT || 4000
@@ -51,7 +53,7 @@ async function startServer() {
   })
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      console.error(`Porta ${PORT} já está em uso. Use PORT=4001 node server.js`)
+      console.error(`Porta ${PORT} já está em uso.`)
     } else {
       console.error(err)
     }
@@ -59,6 +61,7 @@ async function startServer() {
   })
 }
 
+// ────── Auxiliar de chamada do Express ──────
 const isMainModule = process.argv[1] && (
   process.argv[1] === import.meta.filename ||
   process.argv[1].endsWith('/server.js')

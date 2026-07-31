@@ -59,7 +59,7 @@ export default function SearchBar(){
             </div>
 
             {sl > 0 && suggestions.length > 0 && (
-                <ul className={`w-full mx-auto mt-px rounded-b-3xl overflow-hidden ${isDarkMode ? "bg-gray-800/90 shadow-lg shadow-black/50" : "bg-gray-100 shadow-lg shadow-zinc-500/50"}`}>
+                <ul className={`w-full mx-auto mt-px rounded-b-3xl overflow-hidden overflow-y-auto max-h-[40vh] ${isDarkMode ? "bg-gray-800/90 shadow-lg shadow-black/50" : "bg-gray-100 shadow-lg shadow-zinc-500/50"}`}>
                     {suggestions.map((sugestao, index) => (
                         <li
                             key={index}

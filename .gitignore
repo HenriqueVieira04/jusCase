@@ -1,2 +1,5 @@
 documentation/*.txt
 packages/backend/meilisearch/meilisearch
+**/data.ms/
+**/node_modules/
+**/dumps/

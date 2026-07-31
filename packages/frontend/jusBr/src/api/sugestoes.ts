@@ -1,3 +1,5 @@
+// API de busca ao graphQL
+
 const GRAPHQL_URL = 'http://localhost:4001/graphql'
 
 interface SugestaoRaw {
@@ -27,7 +29,7 @@ export async function fetchSugestoes(query: string): Promise<string[]> {
 
     const json = await res.json()
     const sugestoes: SugestaoRaw[] = json?.data?.sugestoes ?? []
-    return sugestoes.map((s) => s.term).slice(0, 10)
+    return sugestoes.map((s) => s.term)
   } catch {
     return []
   }

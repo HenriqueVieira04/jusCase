@@ -1,3 +1,12 @@
+"""
+Aqui temos um código utilizado para fazer scrapping de todos os assuntos abordados no
+cnj, fazemos a busca pela a API passando código a código, visto que não há uma funcionalidade
+que entrega todos os resultados em lote. Transforma-se o retorno para um formato consumivel pelo
+meilisearch.
+"""
+
+
+
 import json
 import string
 from zeep import Client

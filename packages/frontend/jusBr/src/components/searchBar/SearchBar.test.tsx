@@ -3,26 +3,22 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { ThemeProvider } from '../../contexts/ThemeContext'
 import SearchBar from './SearchBar'
 
-// ── Mock do módulo de API ───────────────────────────────────
-// Substitui a função real fetchSugestoes() por uma função
-// fantasma (vi.fn()) que os testes controlam sem precisar
-// do backend rodando.
+// Mock do módulo do meili para não depender do Meilisearch real na hora de rodar os testes
 vi.mock('../../api/sugestoes', () => ({
   fetchSugestoes: vi.fn(),
 }))
 
-// ── Depois do vi.mock, importamos a VERSÃO MOCKADA ──────────
-import { fetchSugestoes } from '../../api/sugestoes'
 
+import { fetchSugestoes } from '../../api/sugestoes'
 const fetchSugestoesMock = vi.mocked(fetchSugestoes)
 
+// função de render de um elemento qualquer
 function renderWithTheme(ui: React.ReactElement) {
   return render(<ThemeProvider>{ui}</ThemeProvider>)
 }
 
 describe('SearchBar', () => {
   // Reseta o estado do mock entre um teste e outro
-  // (chamadas anteriores, retornos programados, etc.)
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -78,7 +74,7 @@ describe('SearchBar', () => {
     const input = screen.getByPlaceholderText('Pesquisar...')
     fireEvent.change(input, { target: { value: 'ação' } })
 
-    // O waitFor espera o debounce (250ms) + o resolve da Promise
+    // O waitFor = debounce + retorno da promise
     await waitFor(() => {
       const items = screen.getAllByRole('listitem')
       expect(items).toHaveLength(2)

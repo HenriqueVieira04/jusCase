@@ -5,6 +5,7 @@
 O case foi feito resolvendo o problema usando o Meilisearch (mecanismo de busca de código aberto) carregado com um index de busca de assuntos categorizados pelo CNJ (Conselho Nacional de Justiça). 
 
 Alguns termos sugeridos para busca:
+- crime
 - ação
 - sexual
 - fraude

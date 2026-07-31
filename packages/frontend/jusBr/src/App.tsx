@@ -1,6 +1,7 @@
 import SearchBar from './components/searchBar/SearchBar';
 import { useTheme } from './contexts/useTheme'
 
+// pagina da aplicação
 function App() {
   const { isDarkMode, toggleDarkMode } = useTheme()
   const bgColor = isDarkMode ? "bg-gray-700" : "bg-gray-200";

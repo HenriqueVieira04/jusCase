@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { typeDefs } from '../server.js'
 import { buildSchema } from 'graphql'
 
+// testes de construção de schema do graphQL
 describe('Schema GraphQL', () => {
   it('compila sem erros', () => {
     expect(() => buildSchema(typeDefs)).not.toThrow()

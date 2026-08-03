@@ -25,25 +25,23 @@ describe('highlightMatch', () => {
     )
   })
 
-  it('destaca múltiplos termos separadamente', () => {
+  it('destaca a busca como prefixo da sugestão', () => {
     const container = renderHighlight('Ação Civil Pública', 'ação civil')
     expect(container.innerHTML).toBe(
-      '<div><strong class="font-bold">Ação</strong> <strong class="font-bold">Civil</strong> Pública</div>'
+      '<div><strong class="font-bold">Ação Civil</strong> Pública</div>'
     )
   })
 
   it('ignora acentos na comparação mas mantém o texto original no destaque', () => {
-    const container = renderHighlight('Ação Rescisória', 'rescisoria')
+    const container = renderHighlight('Ação Rescisória', 'ação')
     expect(container.innerHTML).toBe(
-      '<div>Ação <strong class="font-bold">Rescisória</strong></div>'
+      '<div><strong class="font-bold">Ação</strong> Rescisória</div>'
     )
   })
 
-  it('destaca todas as ocorrências de um mesmo termo', () => {
-    const container = renderHighlight('Pública Pública', 'publica')
-    expect(container.innerHTML).toBe(
-      '<div><strong class="font-bold">Pública</strong> <strong class="font-bold">Pública</strong></div>'
-    )
+  it('não destaca se a busca não for prefixo da sugestão', () => {
+    const container = renderHighlight('Ação Rescisória', 'rescisoria')
+    expect(container.innerHTML).toBe('<div>Ação Rescisória</div>')
   })
 
   it('trata busca com espaços extras', () => {

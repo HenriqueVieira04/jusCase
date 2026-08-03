@@ -21,6 +21,8 @@ Utilizei a IA para acelerar o processo de inserção dos componentes em app.tsx.
 Utilizei a IA para que percorresse o front e fizesse uma refatoração simples, deixando o código responsivo com as features que o tailwind disponibiliza. As alterações foram boas, mesmo mudando alguns parâmetros de tamanhos que eu tinha definido quando estava codando a versão desktop, a sensação de uso da versão desktop não foi alterada. A responsividade para o mobile foi implementada e também ficou de acordo.
 
 Usei a IA para me ajudar a implementar o highlighter. De princípio foi entregue um código que por si só filtrava as sugestões mockadas, mas isso foi rejeitado, já que isso seria feito no lado do backend para ter um melhor desempenho. Pedi então que só implementasse o highlighter, a segunda versão entregou isso, mas o highlighter entregue destacava letra a letra correspondente, o que não me pareceu uma boa forma de implementar. Pedi para ela fazer um .split() dos termos de busca e, para cada sugestão, também fazer um .split() e checar se o termo está na busca. A IA seguiu a lógica solicitada e a implementação ficou de acordo com o que se desejava.
+ 
+__(ANOTAÇÃO: ESSE COMPONENTE FOI ALTERADO APÓS REVISÃO POSTERIOR QUE ESTÁ ESCRITA ADIANTE PRÓXIMO DO FINAL DO TEXTO)__
 
 Pedi para a IA implementar alguns testes padrão para o front. Ainda não tenho tanto conhecimento sobre quais testes são realmente mais prioritários que outros e quais os cruciais que ainda ficaram de fora, mas no momento isso foi suficiente para checar e aprender o funcionamento da esteira de CI do github. Ficou pendente uma revisão mais assídua desses testes gerados.
 
@@ -39,6 +41,8 @@ Implementei também os testes do backend, cobrindo os resolvers, a validação d
 Revisei os testes implementados para o front e para o back e removi as redundâncias que estavam implementadas neles.
 
 Finalmente, pedi a IA que criasse uma LEIAME.md para ajudar na execução do projeto no docker com os comandos corretos.
+
+A partir de esclarecimentos obtidos via email quanto aos critérios que deveriam ser utilizados para que houvesse a atuação da função hightlightmatch(), alterei a lógica utilizada para que os textos contidos nas sugestões que fossem os destacados estivissem totalmente de acordo com o que fora digitado pelo usuário, seguindo uma lógica de prefixo completo ao invés da implementada anteriormente que seguia um destaque difuso para cada termo contido na busca. Além disso alterei o testes que passavam por essa função para que refletissem o funcionamento da nova lógica implementada.
 
 # Implementações posteriores
 

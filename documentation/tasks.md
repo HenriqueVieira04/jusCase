@@ -81,5 +81,5 @@
 - colocar comentarios no código
 - gerar o docker para cada parte quando concluída
 - testar cada uma das partes e a integração entre elas sempre que possível
-- corrigir BUGS imediatamente após encontrados
+- corrigir BUGS imediatamente após encontrados, além de fazer adequações a partir de requisitos novos/revisados
 - ANALISAR suggestions.js ao final
